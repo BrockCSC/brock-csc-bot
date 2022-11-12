@@ -8,7 +8,11 @@ const loadEnvKey = function(key: string) {
 	return result;
 }
 
-export const MFA_TOKEN = loadEnvKey("MFA_TOKEN");
+export const MFA_TOKENS = new Map([
+	["google", loadEnvKey("GOOGLE_MFA_TOKEN")],
+	["bitwarden", loadEnvKey("BITWARDEN_MFA_TOKEN")],
+]);
+
 export const DISCORD_CLIENT_ID = loadEnvKey("DISCORD_CLIENT_ID");
 export const DISCORD_BOT_TOKEN = loadEnvKey("DISCORD_BOT_TOKEN");
 export const CSC_GUILD_ID = loadEnvKey("CSC_GUILD_ID");

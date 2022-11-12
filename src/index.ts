@@ -1,12 +1,12 @@
 import "dotenv/config"
 
-import authenticator from "authenticator";
-import { Client, GuildMember, Intents } from "discord.js";
+import { Client, Intents } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 
-import { MFA_TOKEN, DISCORD_BOT_TOKEN, DISCORD_CLIENT_ID, CSC_GUILD_ID, EXEC_ROLE_ID } from "./config"
+import { DISCORD_BOT_TOKEN, DISCORD_CLIENT_ID, CSC_GUILD_ID, MFA_TOKENS } from "./config"
+import { authCommand } from "./commands/auth";
 
 const rest = new REST({ version: "9" }).setToken(DISCORD_BOT_TOKEN);
 
@@ -18,6 +18,14 @@ const setUpCommands = async function () {
 				.setName("auth")
 				.setDescription("Gives you a six-digit MFA code.")
 				.setDefaultPermission(false)
+				.addStringOption(option => option
+					.setName("service")
+					.setRequired(true)
+					.setDescription("The service you need a MFA code for.")
+					.addChoices(...[
+						...MFA_TOKENS.keys()
+					].map(service => ({ name: service, value: service })))
+				)
 		]
 	}) as [{ id: string }];
 }
@@ -30,14 +38,7 @@ client.on("interactionCreate", async interaction => {
 	if (!interaction.isCommand()) { return; }
 
 	if (interaction.commandName === "auth") {
-		const { member } = interaction;
-
-		if (!(member instanceof GuildMember) || !member.roles.cache.has(EXEC_ROLE_ID)) {
-			await interaction.reply({ content: "nope", ephemeral: true });
-		}
-
-		const token = authenticator.generateToken(MFA_TOKEN);
-		await interaction.reply({ content: `Your verification code is \`${token}\`.`, ephemeral: true });
+		authCommand(interaction);
 	}
 });
 
