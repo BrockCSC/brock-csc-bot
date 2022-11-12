@@ -1,14 +1,12 @@
 import "dotenv/config"
 
-import { Client, Intents } from "discord.js";
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { REST } from "@discordjs/rest";
+import { ChatInputCommandInteraction, Client, GatewayIntentBits, REST, SlashCommandBuilder } from "discord.js";
 import { Routes } from "discord-api-types/v9";
 
 import { DISCORD_BOT_TOKEN, DISCORD_CLIENT_ID, CSC_GUILD_ID, MFA_TOKENS } from "./config"
 import { authCommand } from "./commands/auth";
 
-const rest = new REST({ version: "9" }).setToken(DISCORD_BOT_TOKEN);
+const rest = new REST({ version: "10" }).setToken(DISCORD_BOT_TOKEN);
 
 const setUpCommands = async function () {
 	// TODO: handle `default_permission` deprecation
@@ -17,7 +15,7 @@ const setUpCommands = async function () {
 			new SlashCommandBuilder()
 				.setName("auth")
 				.setDescription("Gives you a six-digit MFA code.")
-				.setDefaultPermission(false)
+				.setDefaultMemberPermissions("0")
 				.addStringOption(option => option
 					.setName("service")
 					.setRequired(true)
@@ -31,13 +29,13 @@ const setUpCommands = async function () {
 }
 
 const client = new Client({
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
 });
 
 client.on("interactionCreate", async interaction => {
 	if (!interaction.isCommand()) { return; }
 
-	if (interaction.commandName === "auth") {
+	if (interaction instanceof ChatInputCommandInteraction && interaction.commandName === "auth") {
 		authCommand(interaction);
 	}
 });

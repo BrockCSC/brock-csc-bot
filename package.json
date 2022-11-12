@@ -12,11 +12,9 @@
 	"keywords": [],
 	"author": "",
 	"dependencies": {
-		"@discordjs/builders": "^0.13.0",
-		"@discordjs/rest": "^0.4.1",
 		"authenticator": "^1.1.5",
-		"discord-api-types": "^0.32.1",
-		"discord.js": "^13.7.0",
+		"discord-api-types": "~0.37.17",
+		"discord.js": "^14.6.0",
 		"dotenv": "^16.0.1"
 	},
 	"devDependencies": {

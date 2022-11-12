@@ -1,9 +1,9 @@
 import authenticator from "authenticator";
-import { CommandInteraction, GuildMember } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember } from "discord.js";
 
 import { EXEC_ROLE_ID, MFA_TOKENS } from "../config"
 
-export const authCommand = async function(interaction: CommandInteraction) {
+export const authCommand = async function(interaction: ChatInputCommandInteraction) {
 	const { member } = interaction;
 
 	if (!(member instanceof GuildMember) || !member.roles.cache.has(EXEC_ROLE_ID)) {
