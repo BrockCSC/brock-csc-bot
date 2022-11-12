@@ -12,7 +12,6 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
 	"dependencies": {
 		"@discordjs/builders": "^0.13.0",
 		"@discordjs/rest": "^0.4.1",
